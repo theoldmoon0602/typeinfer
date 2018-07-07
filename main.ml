@@ -123,8 +123,9 @@ let rec typeinfer exp typenv =
   |App(fune, arge) ->
     let funt, typenv = typeinfer fune typenv in
     let argt, typenv = typeinfer arge typenv in
-    let typenv = subst_to_typenv typenv (unify [(argt, arg_typ funt)]) in
-    (ret_typ funt, typenv)
+    let subst = unify [(argt, arg_typ funt)] in
+    let typenv = subst_to_typenv typenv subst in
+    (apply_substs (ret_typ funt) subst, typenv)
 
 
 let repl () =
